@@ -153,6 +153,31 @@ func TestFilesMissingRootReturnsError(t *testing.T) {
 	require.ErrorIs(t, source.Fragments(ctx, yield), context.Canceled)
 }
 
+func TestFilesCancellationWhenPrefilterSkipsRoot(t *testing.T) {
+	for _, directory := range []bool{false, true} {
+		t.Run(fmt.Sprintf("directory=%t", directory), func(t *testing.T) {
+			path := t.TempDir()
+			if !directory {
+				path = filepath.Join(path, "file.txt")
+				require.NoError(t, os.WriteFile(path, []byte("content"), 0o600))
+			}
+			ctx, cancel := context.WithCancel(t.Context())
+			defer cancel()
+			source := &Files{Path: path, Prefilter: func(map[string]string) bool {
+				// Neither the walker nor an idle reader returns an error when
+				// the final path is skipped. Cancellation must still be reported.
+				cancel()
+				return true
+			}}
+			err := source.Fragments(ctx, func(Fragment, error) error {
+				t.Error("skipped root yielded a fragment")
+				return nil
+			})
+			require.ErrorIs(t, err, context.Canceled)
+		})
+	}
+}
+
 func TestFilesPrefilterPrecedesSizeChecks(t *testing.T) {
 	for _, size := range []int{0, 100} {
 		path := filepath.Join(t.TempDir(), "skip.txt")

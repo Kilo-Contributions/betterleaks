@@ -179,7 +179,10 @@ func (s *Files) Fragments(ctx context.Context, yield FragmentsFunc) error {
 		}
 	})
 	close(paths)
-	return errors.Join(producerErr, g.Wait())
+	workerErr := g.Wait()
+	// Workers can finish successfully while the caller cancels. Check the
+	// caller's context after joining; Wait cancels groupCtx even on success.
+	return errors.Join(producerErr, workerErr, ctx.Err())
 }
 
 func (s *Files) readFile(ctx context.Context, name filePath, yield FragmentsFunc) error {
