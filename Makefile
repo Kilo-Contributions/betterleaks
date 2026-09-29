@@ -1,7 +1,7 @@
 .PHONY: test test-cover failfast profile clean format build
 
 PKG=github.com/betterleaks/betterleaks/v2
-VERSION := $(shell git fetch --tags 2>/dev/null; git describe --tags --abbrev=0 2>/dev/null || echo "dev")
+VERSION ?= $(shell git describe --tags --match 'v2.*' --always --dirty 2>/dev/null || echo "dev")
 LDFLAGS=-ldflags "-X=github.com/betterleaks/betterleaks/v2/version.Version=$(VERSION)"
 COVER=--cover --coverprofile=cover.out
 

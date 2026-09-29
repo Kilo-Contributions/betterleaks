@@ -31,16 +31,20 @@ The `main` branch is for v2 development. V1 maintenance and documentation live o
 
 Upgrading from v1? See the [v2 migration guide](docs/v2_migration.md) for CLI, config, report, and SDK changes.
 
+Until the first stable v2 release, package managers and the Docker `latest` tag
+may still provide v1. Use the migration guide's [release candidate instructions](docs/v2_migration.md#trying-the-release-candidate)
+to try v2 before then.
+
 ```
 # Package managers
 brew install betterleaks
-brew install betterleaks/tap/betterleaks
+brew install --cask betterleaks/tap/betterleaks
 
 # Fedora Linux
 sudo dnf install betterleaks
 
-# Containers
-docker pull ghcr.io/betterleaks/betterleaks:latest
+# Containers (stable v2)
+docker pull ghcr.io/betterleaks/betterleaks:v2
 
 # Go
 go install github.com/betterleaks/betterleaks/v2@latest
@@ -50,6 +54,12 @@ git clone https://github.com/betterleaks/betterleaks
 cd betterleaks
 make build
 ```
+
+Stable v2 releases update the tap's `betterleaks` cask and Docker `:v2` and
+`:latest` tags. Homebrew core updates separately. To keep v1 installed alongside
+v2, use `brew install --cask betterleaks/tap/betterleaks@1` (command:
+`betterleaks-v1`) or the Docker `:v1` tag.
+See [release channels and publishing](docs/releasing.md) for maintainer details.
 
 ### Usage
 

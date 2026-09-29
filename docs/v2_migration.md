@@ -31,7 +31,10 @@ docker pull ghcr.io/betterleaks/betterleaks:v2.0.0-rc.1
 
 Release archives are also available on the
 [releases page](https://github.com/betterleaks/betterleaks/releases).
-The candidate does not update the Docker `latest` tag or Homebrew cask.
+The candidate does not update the Docker `latest` or `v2` tags, the Homebrew
+cask, or GitHub's latest release. Stable v2 releases update these channels;
+v1 maintenance releases continue to use Docker `:v1` and the
+`betterleaks/tap/betterleaks@1` cask (command: `betterleaks-v1`).
 
 Start with your existing configuration and a local, detection-only scan:
 
